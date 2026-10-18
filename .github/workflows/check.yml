@@ -1,0 +1,31 @@
+name: Check
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --test scripts/check.test.mjs
+      - run: node scripts/check.mjs
+        if: github.event_name != 'schedule'
+      - run: node scripts/check.mjs --links | tee links.log
+        if: github.event_name == 'pull_request' || github.event_name == 'schedule'
+      - if: failure() && github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue create --title "Dead links" --body "$(printf '```\n%s\n```' "$(cat links.log)")"

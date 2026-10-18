@@ -1,5 +1,4 @@
-// Checks every listing against schema/listing.schema.json, chains.json and the image rules.
-// `--links` also requests every URL. No dependencies: Node 20 or later.
+// node scripts/check.mjs [--links]
 import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
 import { join } from "node:path";
 
@@ -14,7 +13,6 @@ const IMAGES = {
   cover: { maxBytes: 500 * 1024, check: (w) => (w < 1000 ? "must be at least 1000 px wide" : null) },
 };
 
-/** Width and height from a PNG, JPEG or WebP header; null for anything else. */
 export function imageSize(buffer) {
   if (buffer.readUInt32BE(0) === 0x89504e47) return [buffer.readUInt32BE(16), buffer.readUInt32BE(20)];
   if (buffer.toString("ascii", 0, 4) === "RIFF" && buffer.toString("ascii", 8, 12) === "WEBP") {
@@ -33,7 +31,6 @@ export function imageSize(buffer) {
   return null;
 }
 
-/** Every listing directory: chains/<chain>/<id> (chain from the folder) and shared/<id> (chains in the file). */
 export function listingDirs(base = root) {
   const subdirs = (path) => existsSync(path) ? readdirSync(path, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name) : [];
   return [
@@ -99,7 +96,7 @@ function imageErrors(dir) {
   return errors;
 }
 
-/** 401/403/429 often mean a site that blocks bots (x.com, t.me), so they warn instead of failing. */
+// x.com and t.me block bots, so 401/403/429 is a warning
 async function linkProblem(url) {
   try {
     const response = await fetch(url, { redirect: "follow", signal: AbortSignal.timeout(20_000), headers: { "User-Agent": "Mozilla/5.0 (dapps-and-tools link check)" } });
@@ -121,7 +118,6 @@ async function main() {
     let listing, errors;
     try { listing = JSON.parse(readFileSync(join(path, "listing.json"), "utf8")); errors = listingErrors(listing, dir, chain); }
     catch (error) { errors = [`listing.json: ${error.message}`]; }
-    // The Explorer merges every folder into one index, so an id is unique across all of them.
     if (seen.has(dir)) errors.push(`id "${dir}" is already used by ${seen.get(dir)}`);
     else seen.set(dir, label);
     errors.push(...imageErrors(path));
@@ -139,4 +135,4 @@ async function main() {
   process.exit(failed ? 1 : 0);
 }
 
-if (process.argv[1] && new URL(import.meta.url).pathname.endsWith(process.argv[1].replace(/\\/g, "/").split("/").pop())) main();
+if (process.argv[1]?.endsWith("check.mjs")) main();

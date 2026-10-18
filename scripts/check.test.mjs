@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { listingErrors, imageSize } from "./validate.mjs";
+import { listingErrors, imageSize } from "./check.mjs";
 
 const base = { id: "sample", name: "Sample", category: "wallet", network: "mainnet", status: "open", description: "A sample listing used by the validator tests.", appUrl: "https://example.org/", links: [], maintainers: ["kynraze"] };
 

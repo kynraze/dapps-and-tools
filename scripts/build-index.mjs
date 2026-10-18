@@ -1,8 +1,7 @@
-// Writes index.json: every listing from chains/ and shared/, sorted by name, with its chains,
-// image paths and group (dapp or tool).
+// node scripts/build-index.mjs  (CI runs this after a merge)
 import { readFileSync, existsSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
-import { listingDirs } from "./validate.mjs";
+import { listingDirs } from "./check.mjs";
 
 const root = new URL("..", import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, "$1");
 const TOOLS = new Set(["wallet", "explorer", "analytics", "monitoring", "developer-tools", "infrastructure"]);
