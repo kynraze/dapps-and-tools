@@ -1,0 +1,15 @@
+{
+  "id": "liquid-mining-fund",
+  "name": "Liquid Mining Fund",
+  "category": "rwa",
+  "network": "mainnet",
+  "status": "open",
+  "description": "A tokenized fund investing in low-cost Bitcoin production, from immersion-cooled mining on sustainable power.",
+  "appUrl": "https://liquidmining.fund/",
+  "coverPosition": "center 72%",
+  "links": [
+    { "kind": "token", "href": "https://www.realio.network/tokens/LMX" },
+    { "kind": "x", "href": "https://x.com/lmx_token" }
+  ],
+  "maintainers": ["kynraze"]
+}

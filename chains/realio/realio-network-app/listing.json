@@ -1,0 +1,17 @@
+{
+  "id": "realio-network-app",
+  "name": "Realio Network App",
+  "category": "staking",
+  "network": "mainnet",
+  "status": "open",
+  "description": "Realio's native staking app. Delegate RIO or another bondable token to a validator and manage your rewards.",
+  "appUrl": "https://app.realio.network/staking",
+  "links": [
+    { "kind": "website", "href": "https://www.realio.network/" },
+    { "kind": "token", "href": "https://www.realio.network/tokens/RIO" },
+    { "kind": "x", "href": "https://x.com/realio_network" },
+    { "kind": "telegram", "href": "https://t.me/realio_network_official" }
+  ],
+  "explorer": [{ "kind": "analytics", "topic": "staking" }],
+  "maintainers": ["kynraze"]
+}

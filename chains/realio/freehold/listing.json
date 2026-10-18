@@ -1,0 +1,18 @@
+{
+  "id": "freehold",
+  "name": "Freehold Wallet",
+  "category": "wallet",
+  "network": "mainnet",
+  "status": "open",
+  "description": "A non-custodial, multi-chain DeFi wallet built on Realio's infrastructure, on web, iOS and Android.",
+  "appUrl": "https://app.freehold.finance/",
+  "coverPosition": "bottom",
+  "links": [
+    { "kind": "website", "href": "https://freehold.finance/" },
+    { "kind": "ios", "href": "https://apps.apple.com/us/app/freehold-wallet/id6504279581" },
+    { "kind": "android", "href": "https://play.google.com/store/apps/details?id=finance.freehold.freeholdwallet" },
+    { "kind": "x", "href": "https://x.com/freehold_wallet" },
+    { "kind": "telegram", "href": "https://t.me/freeholdwallet" }
+  ],
+  "maintainers": ["kynraze"]
+}

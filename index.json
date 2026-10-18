@@ -1,0 +1,160 @@
+{
+  "version": 1,
+  "listings": [
+    {
+      "id": "districts",
+      "name": "Districts",
+      "category": "virtual-world",
+      "network": "mainnet",
+      "status": "open",
+      "description": "A real-world themed virtual world where players claim land in real cities.",
+      "appUrl": "https://app.districts.xyz/",
+      "coverPosition": "center 62%",
+      "links": [
+        {
+          "kind": "website",
+          "href": "https://districts.xyz/"
+        },
+        {
+          "kind": "token",
+          "href": "https://www.realio.network/tokens/DSTRX"
+        },
+        {
+          "kind": "x",
+          "href": "https://x.com/districts_xyz"
+        },
+        {
+          "kind": "telegram",
+          "href": "https://t.me/districts_xyz"
+        }
+      ],
+      "explorer": [
+        {
+          "kind": "analytics",
+          "topic": "districts"
+        }
+      ],
+      "maintainers": [
+        "kynraze"
+      ],
+      "chains": [
+        "realio"
+      ],
+      "group": "dapp",
+      "logo": "chains/realio/districts/logo.png",
+      "cover": "chains/realio/districts/cover.png"
+    },
+    {
+      "id": "freehold",
+      "name": "Freehold Wallet",
+      "category": "wallet",
+      "network": "mainnet",
+      "status": "open",
+      "description": "A non-custodial, multi-chain DeFi wallet built on Realio's infrastructure, on web, iOS and Android.",
+      "appUrl": "https://app.freehold.finance/",
+      "coverPosition": "bottom",
+      "links": [
+        {
+          "kind": "website",
+          "href": "https://freehold.finance/"
+        },
+        {
+          "kind": "ios",
+          "href": "https://apps.apple.com/us/app/freehold-wallet/id6504279581"
+        },
+        {
+          "kind": "android",
+          "href": "https://play.google.com/store/apps/details?id=finance.freehold.freeholdwallet"
+        },
+        {
+          "kind": "x",
+          "href": "https://x.com/freehold_wallet"
+        },
+        {
+          "kind": "telegram",
+          "href": "https://t.me/freeholdwallet"
+        }
+      ],
+      "maintainers": [
+        "kynraze"
+      ],
+      "chains": [
+        "realio"
+      ],
+      "group": "tool",
+      "logo": "chains/realio/freehold/logo.png",
+      "cover": "chains/realio/freehold/cover.png"
+    },
+    {
+      "id": "liquid-mining-fund",
+      "name": "Liquid Mining Fund",
+      "category": "rwa",
+      "network": "mainnet",
+      "status": "open",
+      "description": "A tokenized fund investing in low-cost Bitcoin production, from immersion-cooled mining on sustainable power.",
+      "appUrl": "https://liquidmining.fund/",
+      "coverPosition": "center 72%",
+      "links": [
+        {
+          "kind": "token",
+          "href": "https://www.realio.network/tokens/LMX"
+        },
+        {
+          "kind": "x",
+          "href": "https://x.com/lmx_token"
+        }
+      ],
+      "maintainers": [
+        "kynraze"
+      ],
+      "chains": [
+        "realio"
+      ],
+      "group": "dapp",
+      "logo": "chains/realio/liquid-mining-fund/logo.png",
+      "cover": "chains/realio/liquid-mining-fund/cover.png"
+    },
+    {
+      "id": "realio-network-app",
+      "name": "Realio Network App",
+      "category": "staking",
+      "network": "mainnet",
+      "status": "open",
+      "description": "Realio's native staking app. Delegate RIO or another bondable token to a validator and manage your rewards.",
+      "appUrl": "https://app.realio.network/staking",
+      "links": [
+        {
+          "kind": "website",
+          "href": "https://www.realio.network/"
+        },
+        {
+          "kind": "token",
+          "href": "https://www.realio.network/tokens/RIO"
+        },
+        {
+          "kind": "x",
+          "href": "https://x.com/realio_network"
+        },
+        {
+          "kind": "telegram",
+          "href": "https://t.me/realio_network_official"
+        }
+      ],
+      "explorer": [
+        {
+          "kind": "analytics",
+          "topic": "staking"
+        }
+      ],
+      "maintainers": [
+        "kynraze"
+      ],
+      "chains": [
+        "realio"
+      ],
+      "group": "dapp",
+      "logo": "chains/realio/realio-network-app/logo.png",
+      "cover": "chains/realio/realio-network-app/cover.png"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+name: Rebuild index
+
+on:
+  push:
+    branches: [main]
+    paths: ["chains/**", "shared/**", "chains.json", "scripts/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  index:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/validate.mjs
+      - run: node scripts/build-index.mjs
+      - name: Commit index.json if it changed
+        run: |
+          git diff --quiet index.json && exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Rebuild index.json" index.json
+          git push

@@ -1,0 +1,35 @@
+name: Validate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validator tests
+        run: node --test scripts/validate.test.mjs
+      - name: Listings
+        if: github.event_name != 'schedule'
+        run: node scripts/validate.mjs
+      - name: Listings and links
+        if: github.event_name == 'pull_request' || github.event_name == 'schedule'
+        run: node scripts/validate.mjs --links | tee links.log
+      - name: Open an issue for dead links
+        if: failure() && github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue create --title "Weekly link check failed" --body "$(printf 'The weekly link check found problems:\n\n```\n%s\n```' "$(cat links.log)")"
