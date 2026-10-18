@@ -17,10 +17,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: node scripts/validate.mjs
+      - run: node scripts/check.mjs
       - run: node scripts/build-index.mjs
-      - name: Commit index.json if it changed
-        run: |
+      - run: |
           git diff --quiet index.json && exit 0
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
