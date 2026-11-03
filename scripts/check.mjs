@@ -1,6 +1,7 @@
 // node scripts/check.mjs [--links]
 import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
 import { join } from "node:path";
+import { decodePng, edgeColour } from "./png.mjs";
 
 const root = new URL("..", import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, "$1");
 const schema = JSON.parse(readFileSync(join(root, "schema/listing.schema.json"), "utf8"));
@@ -8,9 +9,10 @@ const chains = new Set(JSON.parse(readFileSync(join(root, "chains.json"), "utf8"
 const props = schema.properties;
 const checkLinks = process.argv.includes("--links");
 
+// The logo is always a PNG (the Explorer draws its edge colour from it); the cover may be any of three.
 const IMAGES = {
-  logo: { maxBytes: 200 * 1024, check: (w, h) => (w !== h ? "must be square" : w < 96 ? "must be at least 96 px" : null) },
-  cover: { maxBytes: 500 * 1024, check: (w) => (w < 1000 ? "must be at least 1000 px wide" : null) },
+  logo: { maxBytes: 200 * 1024, extensions: ["png"], check: (w, h) => (w !== h ? "must be square" : w < 96 ? "must be at least 96 px" : null) },
+  cover: { maxBytes: 500 * 1024, extensions: ["png", "webp", "jpg"], optional: true, check: (w) => (w < 1000 ? "must be at least 1000 px wide" : null) },
 };
 
 export function imageSize(buffer) {
@@ -52,11 +54,11 @@ export function listingErrors(listing, dir, chain = null) {
     if (rule.maxLength && value.length > rule.maxLength) add(`"${key}" is longer than ${rule.maxLength} characters`);
     if (rule.pattern && !new RegExp(rule.pattern).test(value)) add(`"${key}" does not match ${rule.pattern}`);
   };
-  ["id", "name", "description", "appUrl", "coverPosition"].forEach(text);
-  for (const key of ["category", "network", "status"]) if (listing[key] != null && !props[key].enum.includes(listing[key])) add(`"${key}" must be one of ${props[key].enum.join(", ")}`);
-  if (listing.id !== dir) add(`"id" must equal its directory name "${dir}"`);
+  ["name", "description", "appUrl", "coverPosition"].forEach(text);
+  for (const key of ["category", "network"]) if (listing[key] != null && !props[key].enum.includes(listing[key])) add(`"${key}" must be one of ${props[key].enum.join(", ")}`);
+  // The folder name is the listing's id.
+  if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(dir) || dir.length > 48) add(`folder name "${dir}" must be lowercase words joined by hyphens, 48 characters at most`);
   if (typeof listing.description === "string" && (listing.description.match(/[.!?](\s|$)/g) ?? []).length > 2) add(`"description" has more than two sentences`);
-  if (listing.status !== "sunset" && !listing.appUrl) add(`"appUrl" is required unless the status is sunset`);
   if (chain) {
     if (!chains.has(chain)) add(`folder chains/${chain} is not a chain in chains.json`);
     if (listing.chains != null) add(`"chains" belongs only in shared/; this listing takes its chain from the folder`);
@@ -71,24 +73,36 @@ export function listingErrors(listing, dir, chain = null) {
   const explorerKinds = props.explorer.items.properties.kind.enum;
   for (const [i, item] of (listing.explorer ?? []).entries()) {
     if (!explorerKinds.includes(item?.kind)) add(`explorer[${i}].kind must be one of ${explorerKinds.join(", ")}`);
-    if (["validator", "account"].includes(item?.kind) && !item.address) add(`explorer[${i}] needs "address"`);
     if (item?.kind === "analytics" && !item.topic) add(`explorer[${i}] needs "topic"`);
-    for (const key of Object.keys(item ?? {})) if (!["kind", "address", "topic"].includes(key)) add(`explorer[${i}] has unknown field "${key}"`);
+    for (const key of Object.keys(item ?? {})) if (!["kind", "topic"].includes(key)) add(`explorer[${i}] has unknown field "${key}"`);
   }
-  const handle = new RegExp(props.maintainers.items.pattern);
-  if (!Array.isArray(listing.maintainers) || !listing.maintainers.length) add(`"maintainers" needs at least one GitHub handle`);
-  else for (const name of listing.maintainers) if (!handle.test(name)) add(`maintainer "${name}" is not a GitHub handle`);
   return errors;
 }
 
 function imageErrors(dir) {
   const errors = [];
   for (const [name, rule] of Object.entries(IMAGES)) {
-    const file = ["png", "webp", "jpg"].map((ext) => join(dir, `${name}.${ext}`)).find(existsSync);
-    if (!file) { errors.push(`missing ${name}.png, ${name}.webp or ${name}.jpg`); continue; }
+    if (name === "logo") for (const ext of ["webp", "jpg"]) if (existsSync(join(dir, `logo.${ext}`))) errors.push("logo must be a PNG");
+    const file = rule.extensions.map((ext) => join(dir, `${name}.${ext}`)).find(existsSync);
+    if (!file) {
+      if (!rule.optional) errors.push(`missing ${name}.${rule.extensions.join(" or ")}`);
+      continue;
+    }
     const bytes = statSync(file).size;
     if (bytes > rule.maxBytes) errors.push(`${name} is ${Math.round(bytes / 1024)} KB, over ${rule.maxBytes / 1024} KB`);
-    const size = imageSize(readFileSync(file));
+    let size;
+    // A logo with a transparent edge, or one the small decoder can't read, is fine: the card draws it on a
+    // neutral tile instead of a tint taken from its edge. Say so, so the author can choose an opaque one.
+    if (name === "logo") {
+      try {
+        const logo = decodePng(readFileSync(file));
+        size = [logo.width, logo.height];
+        if (edgeColour(logo) === null) console.log(`note ${dir}: the logo's edge is transparent, so its card uses a neutral tile`);
+      } catch {
+        size = imageSize(readFileSync(file));
+        console.log(`note ${dir}: the logo is not an 8-bit RGB or RGBA PNG, so its card uses a neutral tile`);
+      }
+    } else size = imageSize(readFileSync(file));
     if (!size) { errors.push(`${name} is not a readable PNG, WebP or JPEG`); continue; }
     const problem = rule.check(...size);
     if (problem) errors.push(`${name} (${size.join("×")}) ${problem}`);
@@ -97,7 +111,7 @@ function imageErrors(dir) {
 }
 
 // x.com and t.me block bots, so 401/403/429 is a warning
-async function linkProblem(url) {
+export async function linkProblem(url) {
   try {
     const response = await fetch(url, { redirect: "follow", signal: AbortSignal.timeout(20_000), headers: { "User-Agent": "Mozilla/5.0 (dapps-and-tools link check)" } });
     if ([401, 403, 429].includes(response.status)) return { warn: `${url} answered ${response.status}` };

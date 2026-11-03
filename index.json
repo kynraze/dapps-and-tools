@@ -1,12 +1,11 @@
 {
   "version": 1,
+  "commit": "500227ce3f3053e717d389e9f3bffb5294af18d7",
   "listings": [
     {
       "id": "districts",
       "name": "Districts",
       "category": "virtual-world",
-      "network": "mainnet",
-      "status": "open",
       "description": "A real-world themed virtual world where players claim land in real cities.",
       "appUrl": "https://app.districts.xyz/",
       "coverPosition": "center 62%",
@@ -34,9 +33,6 @@
           "topic": "districts"
         }
       ],
-      "maintainers": [
-        "kynraze"
-      ],
       "chains": [
         "realio"
       ],
@@ -48,8 +44,6 @@
       "id": "freehold",
       "name": "Freehold Wallet",
       "category": "wallet",
-      "network": "mainnet",
-      "status": "open",
       "description": "A non-custodial, multi-chain DeFi wallet built on Realio's infrastructure, on web, iOS and Android.",
       "appUrl": "https://app.freehold.finance/",
       "coverPosition": "bottom",
@@ -75,9 +69,6 @@
           "href": "https://t.me/freeholdwallet"
         }
       ],
-      "maintainers": [
-        "kynraze"
-      ],
       "chains": [
         "realio"
       ],
@@ -89,8 +80,6 @@
       "id": "liquid-mining-fund",
       "name": "Liquid Mining Fund",
       "category": "rwa",
-      "network": "mainnet",
-      "status": "open",
       "description": "A tokenized fund investing in low-cost Bitcoin production, from immersion-cooled mining on sustainable power.",
       "appUrl": "https://liquidmining.fund/",
       "coverPosition": "center 72%",
@@ -104,9 +93,6 @@
           "href": "https://x.com/lmx_token"
         }
       ],
-      "maintainers": [
-        "kynraze"
-      ],
       "chains": [
         "realio"
       ],
@@ -118,8 +104,6 @@
       "id": "realio-network-app",
       "name": "Realio Network App",
       "category": "staking",
-      "network": "mainnet",
-      "status": "open",
       "description": "Realio's native staking app. Delegate RIO or another bondable token to a validator and manage your rewards.",
       "appUrl": "https://app.realio.network/staking",
       "links": [
@@ -145,9 +129,6 @@
           "kind": "analytics",
           "topic": "staking"
         }
-      ],
-      "maintainers": [
-        "kynraze"
       ],
       "chains": [
         "realio"

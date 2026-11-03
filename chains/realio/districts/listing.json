@@ -1,9 +1,6 @@
 {
-  "id": "districts",
   "name": "Districts",
   "category": "virtual-world",
-  "network": "mainnet",
-  "status": "open",
   "description": "A real-world themed virtual world where players claim land in real cities.",
   "appUrl": "https://app.districts.xyz/",
   "coverPosition": "center 62%",
@@ -13,6 +10,5 @@
     { "kind": "x", "href": "https://x.com/districts_xyz" },
     { "kind": "telegram", "href": "https://t.me/districts_xyz" }
   ],
-  "explorer": [{ "kind": "analytics", "topic": "districts" }],
-  "maintainers": ["kynraze"]
+  "explorer": [{ "kind": "analytics", "topic": "districts" }]
 }

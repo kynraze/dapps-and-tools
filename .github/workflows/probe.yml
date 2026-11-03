@@ -1,0 +1,35 @@
+name: Probe apps
+
+on:
+  schedule:
+    - cron: "0 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/probe.mjs
+      - run: node scripts/build-index.mjs
+      - run: |
+          git diff --quiet probe.json index.json && exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Record the daily app probe" probe.json index.json
+          git push
+      - name: Open an issue for apps down 30 days
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [ -s stale.txt ] || exit 0
+          title="Apps not responding for 30 days"
+          [ -n "$(gh issue list --state open --search "in:title \"$title\"" --json number --jq '.[].number')" ] && exit 0
+          gh issue create --title "$title" --body "$(printf 'Remove these listings, or keep them if the app is back:\n\n```\n%s\n```' "$(cat stale.txt)")"
