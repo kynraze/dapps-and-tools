@@ -1,18 +1,18 @@
 {
   "chains/realio/districts": {
-    "lastOk": "2026-11-22T13:07:31.832Z",
+    "lastOk": "2026-11-23T15:44:07.099Z",
     "failingSince": null
   },
   "chains/realio/freehold": {
-    "lastOk": "2026-11-22T13:07:31.832Z",
+    "lastOk": "2026-11-23T15:44:07.099Z",
     "failingSince": null
   },
   "chains/realio/liquid-mining-fund": {
-    "lastOk": "2026-11-22T13:07:31.832Z",
+    "lastOk": "2026-11-23T15:44:07.099Z",
     "failingSince": null
   },
   "chains/realio/realio-network-app": {
-    "lastOk": "2026-11-22T13:07:31.832Z",
+    "lastOk": "2026-11-23T15:44:07.099Z",
     "failingSince": null
   }
 }
